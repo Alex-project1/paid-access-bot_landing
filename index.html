@@ -8,36 +8,51 @@
     :root {
       --bg: #001534;
       --bg-deep: #000c22;
-      --panel: rgba(8, 27, 70, 0.92);
-      --panel-soft: rgba(10, 31, 76, 0.72);
-      --line: rgba(74, 127, 213, 0.48);
-      --line-strong: rgba(55, 203, 255, 0.9);
+      --surface: rgba(9, 26, 69, 0.88);
+      --surface-strong: rgba(20, 44, 94, 0.98);
+      --surface-soft: rgba(22, 47, 95, 0.95);
+      --line: rgba(58, 111, 198, 0.5);
+      --line-accent: rgba(87, 209, 255, 0.95);
       --text: #f1f4ff;
       --muted: #9caad0;
+      --muted-bright: #c5d3f7;
       --brand: #32c6ff;
       --brand-2: #4ef0db;
       --warn: #ffbe4d;
-      --shadow: 0 0 0 1px rgba(44,95,180,.26), 0 24px 70px rgba(0,0,0,.32);
+      --shadow: 0 0 0 1px rgba(44, 95, 180, 0.26), 0 24px 70px rgba(0, 0, 0, 0.32);
       --radius: 18px;
-      --side-pad: clamp(26px, 5vw, 80px);
       --content-max: 1440px;
+      --page-pad: clamp(16px, 4vw, 80px);
+      --slide-pad-y: clamp(44px, 6vw, 80px);
+      --gap-lg: clamp(24px, 4vw, 64px);
+      --gap-md: clamp(16px, 2vw, 32px);
     }
 
-    * { box-sizing: border-box; }
-    html, body { margin: 0; min-height: 100%; }
-    html { scroll-behavior: smooth; }
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      min-height: 100%;
+      overflow-x: hidden;
       color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at 78% 48%, rgba(23, 102, 255, 0.23), transparent 0 18%, rgba(0,0,0,0) 19%),
+        radial-gradient(circle at 78% 48%, rgba(23, 102, 255, 0.23), transparent 0 18%, rgba(0, 0, 0, 0) 19%),
         radial-gradient(circle at 84% 46%, rgba(18, 186, 255, 0.08), transparent 0 22%),
         linear-gradient(90deg, var(--bg-deep) 0%, #00163d 53%, #00183f 70%, #00112f 100%);
-      overflow-x: hidden;
       scroll-snap-type: y mandatory;
     }
 
-    a { color: inherit; text-decoration: none; }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
     .deck {
       position: relative;
@@ -46,116 +61,136 @@
 
     .slide {
       position: relative;
-      min-height: 100vh;
-      scroll-snap-align: start;
-      display: flex;
-      align-items: stretch;
-      overflow: hidden;
       isolation: isolate;
+      min-height: 100svh;
+      overflow: hidden;
+      display: flex;
+      scroll-snap-align: start;
     }
 
-    .slide::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 85% 52%, rgba(46, 121, 255, 0.18), transparent 0 18%, rgba(0,0,0,0) 19%),
-        linear-gradient(90deg, rgba(0,0,0,0) 53%, rgba(9, 57, 145, 0.18) 73%, rgba(0,0,0,0) 100%);
-      opacity: .9;
-      z-index: -2;
-      pointer-events: none;
-    }
-
+    .slide::before,
     .slide::after {
       content: "";
       position: absolute;
       inset: 0;
-      background:
-        linear-gradient(90deg, rgba(0,0,0,.18) 0%, rgba(0,0,0,0) 18%, rgba(0,0,0,0) 76%, rgba(0,0,0,.28) 100%);
-      z-index: -1;
       pointer-events: none;
     }
 
-    .inner {
-      width: min(calc(100% - 48px), var(--content-max));
+    .slide::before {
+      z-index: -2;
+      opacity: 0.9;
+      background:
+        radial-gradient(circle at 85% 52%, rgba(46, 121, 255, 0.18), transparent 0 18%, rgba(0, 0, 0, 0) 19%),
+        linear-gradient(90deg, rgba(0, 0, 0, 0) 53%, rgba(9, 57, 145, 0.18) 73%, rgba(0, 0, 0, 0) 100%);
+    }
+
+    .slide::after {
+      z-index: -1;
+      background: linear-gradient(90deg, rgba(0, 0, 0, 0.18) 0%, transparent 18%, transparent 76%, rgba(0, 0, 0, 0.28) 100%);
+    }
+
+    .slide__inner {
+      width: min(calc(100% - 2 * var(--page-pad)), var(--content-max));
       margin: auto;
-      padding: clamp(34px, 4vw, 48px) 0;
+      padding-block: var(--slide-pad-y);
       display: grid;
-      grid-template-columns: 0.98fr 1fr;
-      gap: clamp(24px, 3vw, 56px);
+      grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1fr);
       align-items: center;
-      min-height: 100vh;
+      gap: var(--gap-lg);
     }
 
-    .left {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding-left: max(0px, calc(var(--side-pad) - 24px));
-      max-width: 760px;
+    .slide__inner--single {
+      grid-template-columns: 1fr;
+      align-content: center;
     }
 
-    .right {
-      position: relative;
+    .slide__intro {
+      max-width: 780px;
+    }
+
+    .slide__intro--center {
+      max-width: 1120px;
+      margin-inline: auto;
+      text-align: center;
+    }
+
+    .slide__media {
+      min-width: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: min(80vh, 780px);
-      padding-right: clamp(0px, 2vw, 24px);
+    }
+
+    .section-grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(280px, 0.95fr) minmax(320px, 1fr);
+      align-items: stretch;
+      gap: var(--gap-md);
+    }
+
+    .section-grid--reverse .visual-card {
+      order: 2;
+    }
+
+    .stack {
+      display: grid;
+      gap: var(--gap-md);
     }
 
     .chip {
-      align-self: flex-start;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 310px;
+      width: fit-content;
+      max-width: 100%;
+      min-width: min(310px, 100%);
       padding: 12px 24px;
+      border: 1px solid rgba(54, 153, 255, 0.5);
       border-radius: 12px;
-      background: rgba(22, 47, 95, 0.95);
-      border: 1px solid rgba(54, 153, 255, .5);
       color: var(--brand);
-      font-size: clamp(19px, 2vw, 24px);
+      background: var(--surface-soft);
+      box-shadow: inset 0 0 0 1px rgba(73, 154, 255, 0.12);
+      font-size: clamp(18px, 2vw, 24px);
       font-weight: 700;
       line-height: 1.05;
       text-align: center;
-      box-shadow: inset 0 0 0 1px rgba(73, 154, 255, .12);
       transform: translateY(18px);
       opacity: 0;
     }
 
     .title {
-      margin: 42px 0 20px;
-      font-size: clamp(52px, 6.1vw, 74px);
-      line-height: .98;
-      letter-spacing: -.04em;
+      margin: clamp(24px, 4vw, 42px) 0 20px;
+      font-size: clamp(40px, 6vw, 74px);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
       font-weight: 800;
+      text-wrap: balance;
       transform: translateY(26px);
       opacity: 0;
-      text-wrap: balance;
     }
 
     .subtitle {
-      margin: 0 0 42px;
+      margin: 0 0 clamp(24px, 4vw, 42px);
       color: var(--muted);
-      font-size: clamp(22px, 2.5vw, 33px);
+      font-size: clamp(20px, 2.4vw, 33px);
       line-height: 1.22;
       transform: translateY(22px);
       opacity: 0;
     }
 
     .body {
+      max-width: 680px;
+      margin: 0;
       color: var(--muted);
       font-size: clamp(17px, 2vw, 28px);
       line-height: 1.34;
-      max-width: 680px;
       transform: translateY(24px);
       opacity: 0;
     }
 
     .brand-note {
-      margin-top: auto;
-      padding-top: 28px;
+      margin-top: clamp(22px, 4vw, 42px);
       color: var(--brand);
       font-size: clamp(18px, 2vw, 24px);
       font-weight: 700;
@@ -163,60 +198,72 @@
       opacity: 0;
     }
 
-    .panel {
-      width: min(100%, 700px);
-      padding: clamp(28px, 2.4vw, 40px);
-      border-radius: 18px;
-      background: rgba(9, 26, 69, 0.88);
-      border: 1px solid rgba(58, 111, 198, 0.5);
+    .card {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
       box-shadow: var(--shadow);
       backdrop-filter: blur(8px);
-      transform: translateY(30px);
-      opacity: 0;
-      transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
-      display: flex;
-      align-items: center;
-      flex-direction: column;
-      justify-content: center;
+      transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
     }
 
-    .panel:hover, .imgBox:hover {
+    .card:hover,
+    .visual-card:hover {
       transform: translateY(-4px);
-      border-color: rgba(77, 181, 255, .85);
-      box-shadow: 0 0 0 1px rgba(71,171,255,.4), 0 28px 84px rgba(0,0,0,.45), 0 0 40px rgba(36,160,255,.18);
+      border-color: var(--line-accent);
+      box-shadow: 0 0 0 1px rgba(71, 171, 255, 0.4), 0 28px 84px rgba(0, 0, 0, 0.45), 0 0 40px rgba(36, 160, 255, 0.18);
+    }
+
+    .panel {
+      max-width: 700px;
+      padding: clamp(22px, 2.6vw, 40px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      transform: translateY(30px);
+      opacity: 0;
+    }
+
+    .panel--wide {
+      max-width: none;
+    }
+
+    .panel--hero {
+      margin-top: clamp(28px, 4vw, 42px);
     }
 
     .bullets {
       display: grid;
-      gap: clamp(22px, 2.5vw, 34px);
-      padding: 0;
+      gap: clamp(18px, 2.4vw, 34px);
       margin: 0;
+      padding: 0;
       list-style: none;
-      font-size: clamp(23px, 2.6vw, 36px);
+      font-size: clamp(21px, 2.5vw, 36px);
       line-height: 1.14;
     }
 
     .bullet {
       display: grid;
       grid-template-columns: 24px 1fr;
-      gap: 18px;
       align-items: start;
-      transition: transform .3s ease, color .3s ease;
+      gap: 18px;
+      transition: transform 0.3s ease;
     }
 
     .bullet::before {
       content: "";
       width: 16px;
       height: 16px;
-      margin-top: .35em;
-      border-radius: 50%;
+      margin-top: 0.35em;
+      border-radius: 999px;
       background: var(--brand);
-      box-shadow: 0 0 18px rgba(50, 198, 255, .72);
+      box-shadow: 0 0 18px rgba(50, 198, 255, 0.72);
     }
 
-    .bullet.warn::before {
+    .bullet--warn::before {
       background: var(--warn);
-      box-shadow: 0 0 18px rgba(255,190,77,.62);
+      box-shadow: 0 0 18px rgba(255, 190, 77, 0.62);
     }
 
     .panel:hover .bullet {
@@ -224,7 +271,7 @@
     }
 
     .outcome {
-      margin-top: clamp(34px, 3vw, 50px);
+      margin-top: clamp(28px, 4vw, 50px);
       font-size: clamp(24px, 2.6vw, 38px);
       line-height: 1.18;
       font-weight: 800;
@@ -234,234 +281,195 @@
       width: min(100%, 640px);
       margin: 22px auto 0;
       padding: 18px 26px;
+      border: 1px solid rgba(61, 145, 239, 0.56);
       border-radius: 16px;
       background: rgba(22, 44, 93, 0.96);
-      border: 1px solid rgba(61, 145, 239, .56);
       box-shadow: var(--shadow);
-      font-size: clamp(26px, 2.3vw, 34px);
+      font-size: clamp(24px, 2.3vw, 34px);
       line-height: 1.12;
       font-weight: 800;
       text-align: center;
       transform: translateY(22px);
       opacity: 0;
-      transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+      transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
     }
 
     .cta-box:hover {
       transform: translateY(-3px);
-      border-color: rgba(87, 209, 255, .95);
-      box-shadow: 0 0 0 1px rgba(89,209,255,.38), 0 26px 80px rgba(0,0,0,.42);
+      border-color: var(--line-accent);
+      box-shadow: 0 0 0 1px rgba(89, 209, 255, 0.38), 0 26px 80px rgba(0, 0, 0, 0.42);
     }
 
     .visual {
       position: relative;
       width: min(760px, 100%);
       aspect-ratio: 1 / 1;
-      border-radius: 0;
       background-position: center;
-      background-size: cover;
       background-repeat: no-repeat;
-      filter: drop-shadow(0 40px 90px rgba(0,0,0,.42));
-      transform: translateX(30px) scale(.98);
+      background-size: cover;
+      filter: drop-shadow(0 40px 90px rgba(0, 0, 0, 0.42));
+      transform: translateX(30px) scale(0.98);
       opacity: 0;
-      transition: transform .65s cubic-bezier(.2,.9,.2,1), filter .35s ease;
+      transition: transform 0.65s cubic-bezier(0.2, 0.9, 0.2, 1), filter 0.35s ease;
     }
 
     .visual:hover {
-      filter: drop-shadow(0 55px 110px rgba(0,0,0,.55)) drop-shadow(0 0 44px rgba(40,150,255,.22));
+      filter: drop-shadow(0 55px 110px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 44px rgba(40, 150, 255, 0.22));
     }
 
-    .visual.phone {
+    .visual--phone {
       aspect-ratio: 1 / 1.08;
+      background-image: url("./1.png");
       background-size: contain;
-      background-image: url(./1.png);
     }
 
-    .visual.people {
-      aspect-ratio: 1 / .95;
-      background-image: url(./2.png);
+    .visual-card {
+      min-height: clamp(360px, 50vw, 640px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background-color: var(--surface);
+      box-shadow: var(--shadow);
+      transform: translateY(30px);
+      opacity: 0;
     }
+
+    .visual--people { background-image: url("./2.png"); }
+    .visual--shield { background-image: url("./3.png"); }
+    .visual--girl { background-image: url("./4.png"); }
+    .visual--team { background-image: url("./5.png"); }
 
     .flow {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(130px, 1fr));
+      align-items: stretch;
       gap: clamp(10px, 1.2vw, 18px);
       width: 100%;
-      margin-top: 70px;
+      margin-top: clamp(24px, 5vw, 70px);
     }
 
     .flow-card {
-      flex: 1 1 0;
       min-height: 190px;
       padding: 20px 18px;
-      border-radius: 14px;
-      background: rgba(8, 25, 66, .86);
-      border: 1px solid rgba(46, 94, 174, .62);
-      box-shadow: var(--shadow);
       display: flex;
       flex-direction: column;
       justify-content: center;
       gap: 12px;
-      position: relative;
       transform: translateY(32px);
       opacity: 0;
-      transition: transform .35s ease, border-color .35s ease, box-shadow .35s ease, background .35s ease;
     }
 
-    .flow-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(87,209,255, .95);
-      box-shadow: 0 0 0 1px rgba(87,209,255,.35), 0 22px 70px rgba(0,0,0,.42), 0 0 36px rgba(50,198,255,.18);
+    .flow-card.is-active {
+      border-color: var(--line-accent);
+      background: var(--surface-strong);
+      box-shadow: 0 0 0 1px rgba(87, 209, 255, 0.48), 0 0 35px rgba(50, 198, 255, 0.22), 0 26px 76px rgba(0, 0, 0, 0.44);
     }
 
-    .flow-card.active {
-      background: rgba(20, 44, 94, .98);
-      border-color: rgba(87,209,255,.98);
-      box-shadow: 0 0 0 1px rgba(87,209,255,.48), 0 0 35px rgba(50,198,255,.22), 0 26px 76px rgba(0,0,0,.44);
-    }
-
-    .flow-card .step {
+    .flow-card__step {
       color: var(--brand);
-      font-size: 32px;
+      font-size: clamp(22px, 2.2vw, 32px);
       font-weight: 700;
     }
 
-    .flow-card .main {
-      font-size: clamp(32px, 2.2vw, 44px);
+    .flow-card__title {
+      font-size: clamp(28px, 2.5vw, 44px);
       line-height: 1.06;
       font-weight: 800;
     }
 
-    .flow-card .mini {
+    .flow-card__text {
       color: var(--muted);
-      font-size: clamp(18px, 1.3vw, 24px);
+      font-size: clamp(16px, 1.4vw, 24px);
       line-height: 1.16;
     }
 
-    .flow-arrow {
-      width: 50px;
-      height: 50px;
-      position: relative;
-      flex: 0 0 50px;
-      transform: translateY(16px);
-      opacity: 0;
-    }
-
-    .flow-arrow::before {
-      content: "";
-      position: absolute;
-      inset: 8px 0;
-      clip-path: polygon(0 50%, 58% 0, 58% 24%, 100% 24%, 100% 76%, 58% 76%, 58% 100%);
-      background: linear-gradient(90deg, rgba(42,97,183,.55), rgba(57,125,226,.8));
-      filter: drop-shadow(0 0 16px rgba(51,119,222,.35));
-      transform: rotate(180deg);
-    }
-
     .system-box {
-      width: min(100%, 1340px);
-      margin-top: 120px;
-      margin-inline: auto;
+      max-width: 1340px;
+      margin: clamp(18px, 4vw, 54px) auto 0;
       padding: 22px 34px;
       border-radius: 16px;
       background: rgba(17, 38, 81, 0.92);
-      border: 1px solid rgba(60, 112, 191, .55);
-      box-shadow: var(--shadow);
       text-align: center;
-      font-size: clamp(23px, 1.8vw, 34px);
+      font-size: clamp(22px, 1.8vw, 34px);
       line-height: 1.22;
       transform: translateY(26px);
       opacity: 0;
-      transition: transform .35s ease, border-color .35s ease, box-shadow .35s ease;
-    }
-
-    .system-box:hover {
-      transform: translateY(-3px);
-      border-color: rgba(87,209,255,.88);
-      box-shadow: 0 0 0 1px rgba(87,209,255,.35), 0 24px 72px rgba(0,0,0,.4);
-    }
-
-    .stack {
-      display: grid;
-      gap: 18px;
     }
 
     .lede-strong {
-      margin-top: 40px;
+      margin-top: clamp(28px, 4vw, 40px);
+      max-width: 760px;
       font-size: clamp(26px, 2.7vw, 45px);
       line-height: 1.1;
       font-weight: 800;
-      max-width: 760px;
       transform: translateY(20px);
       opacity: 0;
     }
 
     .lede-italic {
-      color: #c5d3f7;
-      font-style: italic;
-      font-size: clamp(16px, 1.5vw, 24px);
-      line-height: 1.26;
       max-width: 700px;
-      margin-top: -6px;
+      margin-top: 16px;
+      color: var(--muted-bright);
+      font-size: clamp(16px, 1.5vw, 24px);
+      font-style: italic;
+      line-height: 1.26;
       transform: translateY(22px);
       opacity: 0;
     }
 
     .nav-dots {
       position: fixed;
-      right: 24px;
-      top: 50%;
-      transform: translateY(-50%);
       z-index: 40;
+      top: 50%;
+      right: 24px;
       display: flex;
       flex-direction: column;
       gap: 12px;
+      transform: translateY(-50%);
     }
 
-    .nav-dots a {
+    .nav-dots__link {
       width: 14px;
       height: 14px;
+      border: 1px solid rgba(88, 157, 255, 0.55);
       border-radius: 999px;
-      border: 1px solid rgba(88, 157, 255, .55);
-      background: rgba(8, 28, 70, .86);
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
-      transition: transform .22s ease, background .22s ease, box-shadow .22s ease;
+      background: rgba(8, 28, 70, 0.86);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+      transition: transform 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
     }
 
-    .nav-dots a:hover,
-    .nav-dots a.active {
+    .nav-dots__link:hover,
+    .nav-dots__link.is-active {
       transform: scale(1.22);
       background: var(--brand);
-      box-shadow: 0 0 16px rgba(50,198,255,.55);
+      box-shadow: 0 0 16px rgba(50, 198, 255, 0.55);
     }
 
     .top-link {
       position: fixed;
+      z-index: 40;
       left: 24px;
       bottom: 24px;
-      z-index: 40;
       padding: 12px 16px;
+      border: 1px solid rgba(67, 126, 214, 0.44);
       border-radius: 999px;
-      background: rgba(7, 24, 59, .9);
-      border: 1px solid rgba(67, 126, 214, .44);
       color: var(--text);
+      background: rgba(7, 24, 59, 0.9);
+      box-shadow: var(--shadow);
       font-size: 14px;
       font-weight: 700;
-      box-shadow: var(--shadow);
-      transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+      transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
     }
 
     .top-link:hover {
       transform: translateY(-2px);
-      border-color: rgba(87,209,255,.82);
-      box-shadow: 0 0 0 1px rgba(87,209,255,.28), 0 16px 54px rgba(0,0,0,.35);
+      border-color: rgba(87, 209, 255, 0.82);
+      box-shadow: 0 0 0 1px rgba(87, 209, 255, 0.28), 0 16px 54px rgba(0, 0, 0, 0.35);
     }
 
     .glow {
       position: absolute;
-      inset: auto;
-      right: 8%;
       top: 10%;
+      right: 8%;
       width: 380px;
       height: 380px;
       background: radial-gradient(circle, rgba(100, 148, 225, 0.2), transparent 65%);
@@ -470,16 +478,52 @@
       animation: drift 7.2s ease-in-out infinite;
     }
 
-    .glow.alt {
+    .glow--alt {
+      top: auto;
+      right: 22%;
+      bottom: 10%;
       width: 320px;
       height: 320px;
-      top: auto;
-      bottom: 10%;
-      right: 22%;
+      background: radial-gradient(circle, rgba(17, 227, 221, 0.12), transparent 68%);
       animation-duration: 8.4s;
       animation-delay: -2.8s;
-      background: radial-gradient(circle, rgba(17,227,221,.12), transparent 68%);
     }
+
+    .is-visible .chip,
+    .is-visible .title,
+    .is-visible .subtitle,
+    .is-visible .body,
+    .is-visible .brand-note,
+    .is-visible .panel,
+    .is-visible .cta-box,
+    .is-visible .lede-strong,
+    .is-visible .lede-italic,
+    .is-visible .visual,
+    .is-visible .visual-card,
+    .is-visible .flow-card,
+    .is-visible .system-box {
+      opacity: 1;
+      transform: none;
+    }
+
+    .is-visible .chip { transition: opacity 0.55s ease, transform 0.55s ease; }
+    .is-visible .title { transition: opacity 0.7s ease 0.08s, transform 0.7s ease 0.08s; }
+    .is-visible .subtitle { transition: opacity 0.7s ease 0.16s, transform 0.7s ease 0.16s; }
+    .is-visible .body { transition: opacity 0.7s ease 0.22s, transform 0.7s ease 0.22s; }
+    .is-visible .panel,
+    .is-visible .visual-card { transition: opacity 0.78s ease 0.28s, transform 0.78s ease 0.28s, border-color 0.35s ease, box-shadow 0.35s ease, background 0.35s ease; }
+    .is-visible .cta-box,
+    .is-visible .lede-strong,
+    .is-visible .lede-italic,
+    .is-visible .brand-note { transition: opacity 0.72s ease 0.32s, transform 0.72s ease 0.32s; }
+    .is-visible .visual--phone { animation: bob 7.6s ease-in-out infinite; }
+    .is-visible .flow-card { transition: opacity 0.62s ease, transform 0.62s ease, border-color 0.35s ease, box-shadow 0.35s ease, background 0.35s ease; }
+    .is-visible .flow-card:nth-child(1) { transition-delay: 0.18s; }
+    .is-visible .flow-card:nth-child(2) { transition-delay: 0.30s; }
+    .is-visible .flow-card:nth-child(3) { transition-delay: 0.42s; }
+    .is-visible .flow-card:nth-child(4) { transition-delay: 0.54s; }
+    .is-visible .flow-card:nth-child(5) { transition-delay: 0.66s; }
+    .is-visible .system-box { transition: opacity 0.8s ease 0.84s, transform 0.8s ease 0.84s, border-color 0.35s ease, box-shadow 0.35s ease; animation: pulseBorder 4.2s ease-in-out infinite; }
 
     @keyframes drift {
       0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
@@ -487,138 +531,200 @@
     }
 
     @keyframes bob {
-      0%, 100% { transform: translateY(0px); }
+      0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-8px); }
     }
 
     @keyframes pulseBorder {
-      0%, 100% { box-shadow: 0 0 0 1px rgba(87,209,255,.18), 0 24px 70px rgba(0,0,0,.32); }
-      50% { box-shadow: 0 0 0 1px rgba(87,209,255,.34), 0 24px 70px rgba(0,0,0,.36), 0 0 30px rgba(50,198,255,.14); }
+      0%, 100% { box-shadow: 0 0 0 1px rgba(87, 209, 255, 0.18), 0 24px 70px rgba(0, 0, 0, 0.32); }
+      50% { box-shadow: 0 0 0 1px rgba(87, 209, 255, 0.34), 0 24px 70px rgba(0, 0, 0, 0.36), 0 0 30px rgba(50, 198, 255, 0.14); }
     }
 
-    .slide.is-visible .chip,
-    .slide.is-visible .title,
-    .slide.is-visible .subtitle,
-    .slide.is-visible .body,
-    .slide.is-visible .brand-note,
-    .slide.is-visible .panel,
-    .slide.is-visible .cta-box,
-    .slide.is-visible .lede-strong,
-    .slide.is-visible .lede-italic,
-    .slide.is-visible .visual,
-    .slide.is-visible .flow-card,
-    .slide.is-visible .flow-arrow,
-    .slide.is-visible .system-box {
-      opacity: 1;
-      transform: none;
-    }
+    @media (max-width: 1180px) {
+      body {
+        scroll-snap-type: none;
+      }
 
-    .slide.is-visible .chip { transition: opacity .55s ease, transform .55s ease; }
-    .slide.is-visible .title { transition: opacity .7s ease .08s, transform .7s ease .08s; }
-    .slide.is-visible .subtitle { transition: opacity .7s ease .16s, transform .7s ease .16s; }
-    .slide.is-visible .body { transition: opacity .7s ease .22s, transform .7s ease .22s; }
-    .slide.is-visible .panel { transition: opacity .78s ease .28s, transform .78s ease .28s; }
-    .slide.is-visible .cta-box,
-    .slide.is-visible .lede-strong,
-    .slide.is-visible .lede-italic,
-    .slide.is-visible .brand-note { transition: opacity .72s ease .32s, transform .72s ease .32s; }
-    /* .slide.is-visible .visual, .panel {
-      transition: opacity .9s cubic-bezier(.2,.9,.2,1) .24s, transform .9s cubic-bezier(.2,.9,.2,1) .24s, filter .35s ease;
-      animation: bob 7.6s ease-in-out infinite;
-    } */
-    .levitation{
-      transition: opacity .9s cubic-bezier(.2,.9,.2,1) .24s, transform .9s cubic-bezier(.2,.9,.2,1) .24s, filter .35s ease;
-      animation: bob 7.6s ease-in-out infinite;
-    }
-    .slide.is-visible .flow-card:nth-of-type(1) { transition: opacity .62s ease .18s, transform .62s ease .18s, border-color .35s ease, box-shadow .35s ease, background .35s ease; }
-    .slide.is-visible .flow-arrow:nth-of-type(2) { transition: opacity .52s ease .26s, transform .52s ease .26s; }
-    .slide.is-visible .flow-card:nth-of-type(3) { transition: opacity .62s ease .34s, transform .62s ease .34s, border-color .35s ease, box-shadow .35s ease, background .35s ease; }
-    .slide.is-visible .flow-arrow:nth-of-type(4) { transition: opacity .52s ease .42s, transform .52s ease .42s; }
-    .slide.is-visible .flow-card:nth-of-type(5) { transition: opacity .62s ease .50s, transform .62s ease .50s, border-color .35s ease, box-shadow .35s ease, background .35s ease; }
-    .slide.is-visible .flow-arrow:nth-of-type(6) { transition: opacity .52s ease .58s, transform .52s ease .58s; }
-    .slide.is-visible .flow-card:nth-of-type(7) { transition: opacity .62s ease .66s, transform .62s ease .66s, border-color .35s ease, box-shadow .35s ease, background .35s ease; }
-    .slide.is-visible .flow-arrow:nth-of-type(8) { transition: opacity .52s ease .74s, transform .52s ease .74s; }
-    .slide.is-visible .flow-card:nth-of-type(9) { transition: opacity .62s ease .82s, transform .62s ease .82s, border-color .35s ease, box-shadow .35s ease, background .35s ease; }
-    .slide.is-visible .system-box { transition: opacity .8s ease .96s, transform .8s ease .96s, border-color .35s ease, box-shadow .35s ease; animation: pulseBorder 4.2s ease-in-out infinite; }
+      .slide {
+        min-height: auto;
+      }
 
-    @media (max-width: 1280px) {
-      .inner { grid-template-columns: 1fr; gap: 24px; width: min(calc(100% - 32px), 1280px); }
-      .left { padding-left: 0; }
-      .right { min-height: 36vh; padding-right: 0; }
-      .visual { width: min(820px, 100%); }
-      .flow { flex-wrap: wrap; justify-content: center; }
-      .flow-card { flex: 1 1 calc(50% - 18px); min-width: 230px; }
-      .flow-arrow { display: none; }
-      .system-box { margin-top: 28px; }
-      .nav-dots { right: 14px; }
+      .slide__inner,
+      .section-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .slide__media {
+        min-height: auto;
+      }
+
+      .slide__intro,
+      .slide__intro--center,
+      .body,
+      .lede-strong,
+      .lede-italic {
+        max-width: none;
+      }
+
+      .section-grid--reverse .visual-card {
+        order: 0;
+      }
+
+      .panel {
+        max-width: none;
+      }
+
+      .visual {
+        width: min(820px, 100%);
+      }
+
+      .visual-card {
+        min-height: clamp(320px, 58vw, 560px);
+      }
+
+      .flow {
+        grid-template-columns: repeat(2, minmax(220px, 1fr));
+      }
+
+      .flow-card:last-child {
+        grid-column: 1 / -1;
+      }
+
+      .nav-dots {
+        right: 14px;
+      }
     }
 
     @media (max-width: 720px) {
-      body { scroll-snap-type: none; }
-      .slide, .inner { min-height: auto; }
-      .left { padding-top: 32px; }
-      .chip { min-width: unset; width: fit-content; max-width: 100%; font-size: 16px; padding: 10px 16px; }
-      .title { margin-top: 24px; font-size: 44px; }
-      .subtitle { font-size: 18px; margin-bottom: 24px; }
-      .body { font-size: 16px; }
-      .bullets { gap: 18px; font-size: 18px; }
-      .panel { padding: 20px; }
-      .flow-card { min-height: 140px; padding: 16px; }
-      .flow-card .step { font-size: 20px; }
-      .flow-card .main { font-size: 24px; }
-      .flow-card .mini { font-size: 14px; }
-      .system-box { padding: 18px 20px; font-size: 18px; }
-      .cta-box, .lede-strong { font-size: 22px; }
-      .lede-italic { font-size: 15px; }
-      .nav-dots { display: none; }
-      .top-link { left: 14px; bottom: 14px; }
-      .visual { aspect-ratio: 1/.86; }
+      :root {
+        --page-pad: 16px;
+        --slide-pad-y: 34px;
+      }
+
+      .slide__inner {
+        width: min(calc(100% - 32px), var(--content-max));
+        gap: 24px;
+      }
+
+      .slide__intro--center {
+        text-align: left;
+      }
+
+      .chip {
+        min-width: 0;
+        padding: 10px 16px;
+        font-size: 16px;
+      }
+
+      .title {
+        margin-top: 22px;
+        font-size: clamp(34px, 11vw, 44px);
+      }
+
+      .subtitle {
+        margin-bottom: 20px;
+        font-size: 18px;
+      }
+
+      .body,
+      .lede-italic {
+        font-size: 16px;
+      }
+
+      .bullets {
+        gap: 16px;
+        font-size: 18px;
+      }
+
+      .bullet {
+        grid-template-columns: 18px 1fr;
+        gap: 12px;
+      }
+
+      .bullet::before {
+        width: 11px;
+        height: 11px;
+      }
+
+      .panel {
+        padding: 20px;
+      }
+
+      .visual-card {
+        min-height: 280px;
+        aspect-ratio: 1 / 0.86;
+      }
+
+      .visual--phone {
+        max-height: 460px;
+      }
+
+      .flow {
+        grid-template-columns: 1fr;
+      }
+
+      .flow-card,
+      .flow-card:last-child {
+        grid-column: auto;
+        min-height: 132px;
+        padding: 16px;
+      }
+
+      .flow-card__title {
+        font-size: 24px;
+      }
+
+      .system-box {
+        padding: 18px 20px;
+        font-size: 18px;
+      }
+
+      .cta-box,
+      .lede-strong {
+        font-size: 22px;
+      }
+
+      .nav-dots {
+        display: none;
+      }
+
+      .top-link {
+        left: 14px;
+        bottom: 14px;
+        padding: 10px 14px;
+      }
     }
-    .wrapper{
-      width: 100%;
+
+    @media (max-width: 420px) {
+      .top-link {
+        display: none;
+      }
+
+      .visual-card {
+        min-height: 230px;
+      }
     }
-    .box{
-      display: flex;
-    align-items: stretch;
-    gap: 10px;
-    justify-content: center;
-    }
-    .imgBox{
-      border-radius: 18px;
-    background: rgba(9, 26, 69, 0.88);
-    border: 1px solid rgba(58, 111, 198, 0.5);
-    box-shadow: var(--shadow);
-    backdrop-filter: blur(8px);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    }
-    .leftBox{text-align: center;}
-    .panelBox,.imgBox{
-      max-width: 45dvw;
-    }
-    .imgShield{
-      background-image: url(./3.png);
-    }
-    .imgGirl{
-      background-image: url(./4.png);
-    }
-    .imgPeoples{
-      background-image: url(./5.png);
-    }
-    .panelLast{
-      width: 100%;
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
     }
   </style>
 </head>
 <body>
   <nav class="nav-dots" aria-label="Навигация по слайдам">
-    <a href="#slide-1" class="active" aria-label="Слайд 1"></a>
-    <a href="#slide-2" aria-label="Слайд 2"></a>
-    <a href="#slide-3" aria-label="Слайд 3"></a>
-    <a href="#slide-4" aria-label="Слайд 4"></a>
-    <a href="#slide-5" aria-label="Слайд 5"></a>
-    <a href="#slide-6" aria-label="Слайд 6"></a>
+    <a class="nav-dots__link is-active" href="#slide-1" aria-label="Слайд 1"></a>
+    <a class="nav-dots__link" href="#slide-2" aria-label="Слайд 2"></a>
+    <a class="nav-dots__link" href="#slide-3" aria-label="Слайд 3"></a>
+    <a class="nav-dots__link" href="#slide-4" aria-label="Слайд 4"></a>
+    <a class="nav-dots__link" href="#slide-5" aria-label="Слайд 5"></a>
+    <a class="nav-dots__link" href="#slide-6" aria-label="Слайд 6"></a>
   </nav>
 
   <a class="top-link" href="#slide-1">↑ К началу</a>
@@ -626,16 +732,16 @@
   <main class="deck">
     <section class="slide is-visible" id="slide-1">
       <div class="glow"></div>
-      <div class="glow alt"></div>
-      <div class="inner">
-        <div class="left">
-          <div class="chip">Telegram • Подписки •<br/>Аналитика</div>
-          <h1 class="title">Монетизация Telegram<br/>без хаоса</h1>
+      <div class="glow glow--alt"></div>
+      <div class="slide__inner">
+        <div class="slide__intro">
+          <div class="chip">Telegram • Подписки •<br />Аналитика</div>
+          <h1 class="title">Монетизация Telegram<br />без хаоса</h1>
           <p class="body">
             Один инструмент, который превращает канал в управляемый продукт:
             тарифы, доступ, заявки, платежи и статистика.
           </p>
-          <div class="panel" style="margin-top: 42px;">
+          <div class="card panel panel--hero">
             <ul class="bullets">
               <li class="bullet">Выдача доступа без ручной рутины</li>
               <li class="bullet">Реклама с понятной атрибуцией</li>
@@ -644,98 +750,91 @@
           </div>
           <div class="brand-note">Paid Access Bot</div>
         </div>
-        <div class="right">
-          <div class="visual phone levitation"></div>
+        <div class="slide__media">
+          <div class="visual visual--phone" aria-hidden="true"></div>
         </div>
       </div>
     </section>
 
     <section class="slide" id="slide-2">
       <div class="glow"></div>
-      <div class="glow alt"></div>
-      <div class="wrapper">
-        <div class="leftBox">
+      <div class="glow glow--alt"></div>
+      <div class="slide__inner slide__inner--single">
+        <div class="slide__intro slide__intro--center">
           <h2 class="title">Когда канал растёт — хаос растёт быстрее</h2>
           <div class="subtitle">Боль, которую клиент чувствует каждый день</div>
-       
-          <div class="brand-note">Paid Access Bot</div>
         </div>
-        <div class="box">
-          <div class="visual people imgBox"></div>
-          <div class="panel panelBox">
+        <div class="section-grid">
+          <div class="visual visual-card visual--people" aria-hidden="true"></div>
+          <div class="card panel panel--wide">
             <ul class="bullets">
-              <li class="bullet warn">Доступ в канал выдаётся вручную</li>
-              <li class="bullet warn">Нельзя понять, какая реклама реально продаёт</li>
-              <li class="bullet warn">Тарифы, менеджеры и пользователи тонут в сообщениях</li>
-              <li class="bullet warn">Команда тратит время не на рост, а на операционку</li>
+              <li class="bullet bullet--warn">Доступ в канал выдаётся вручную</li>
+              <li class="bullet bullet--warn">Нельзя понять, какая реклама реально продаёт</li>
+              <li class="bullet bullet--warn">Тарифы, менеджеры и пользователи тонут в сообщениях</li>
+              <li class="bullet bullet--warn">Команда тратит время не на рост, а на операционку</li>
             </ul>
             <div class="outcome">Итог: канал зарабатывает меньше, чем мог бы.</div>
           </div>
         </div>
+        <div class="brand-note">Paid Access Bot</div>
       </div>
     </section>
 
     <section class="slide" id="slide-3">
       <div class="glow"></div>
-      <div class="glow alt"></div>
-      <div class="inner" style="grid-template-columns: 1fr;">
-        <div class="leftBox" style="max-width:none; padding-left:max(0px, calc(var(--side-pad) - 24px));">
+      <div class="glow glow--alt"></div>
+      <div class="slide__inner slide__inner--single">
+        <div class="slide__intro slide__intro--center">
           <h2 class="title">Как это работает</h2>
           <div class="subtitle">Простой путь от трафика до денег и удержания</div>
         </div>
         <div class="stack">
-          <div class="flow">
-            <div class="flow-card">
-              <div class="step">1</div>
-              <div class="main">Трафик</div>
-              <div class="mini">Источник</div>
+          <div class="flow" aria-label="Путь пользователя от трафика до аналитики">
+            <div class="card flow-card">
+              <div class="flow-card__step">1</div>
+              <div class="flow-card__title">Трафик</div>
+              <div class="flow-card__text">Источник</div>
             </div>
-            <div class="flow-arrow"></div>
-            <div class="flow-card">
-              <div class="step">2</div>
-              <div class="main">Тариф</div>
-              <div class="mini">выбор оффера</div>
+            <div class="card flow-card">
+              <div class="flow-card__step">2</div>
+              <div class="flow-card__title">Тариф</div>
+              <div class="flow-card__text">выбор оффера</div>
             </div>
-            <div class="flow-arrow"></div>
-            <div class="flow-card active">
-              <div class="step">3</div>
-              <div class="main">Оплата</div>
-              <div class="mini">или share-link</div>
+            <div class="card flow-card is-active">
+              <div class="flow-card__step">3</div>
+              <div class="flow-card__title">Оплата</div>
+              <div class="flow-card__text">или share-link</div>
             </div>
-            <div class="flow-arrow"></div>
-            <div class="flow-card">
-              <div class="step">4</div>
-              <div class="main">Доступ</div>
-              <div class="mini">в Telegram-канал</div>
+            <div class="card flow-card">
+              <div class="flow-card__step">4</div>
+              <div class="flow-card__title">Доступ</div>
+              <div class="flow-card__text">в Telegram-канал</div>
             </div>
-            <div class="flow-arrow"></div>
-            <div class="flow-card">
-              <div class="step">5</div>
-              <div class="main">Аналитика</div>
-              <div class="mini">и удержание</div>
+            <div class="card flow-card">
+              <div class="flow-card__step">5</div>
+              <div class="flow-card__title">Аналитика</div>
+              <div class="flow-card__text">и удержание</div>
             </div>
           </div>
-          <div class="system-box">
+          <div class="card system-box">
             Всё в одной системе: owner / admin / manager, поддержка, напоминания,
             удаление после окончания подписки.
           </div>
-          <div class="brand-note" style="padding-left:max(0px, calc(var(--side-pad) - 24px));">Paid Access Bot</div>
         </div>
+        <div class="brand-note">Paid Access Bot</div>
       </div>
     </section>
 
     <section class="slide" id="slide-4">
       <div class="glow"></div>
-      <div class="glow alt"></div>
-      <div class="wrapper">
-        <div class="leftBox">
+      <div class="glow glow--alt"></div>
+      <div class="slide__inner slide__inner--single">
+        <div class="slide__intro slide__intro--center">
           <h2 class="title">Для владельца канала — контроль, а не ручной режим</h2>
           <div class="subtitle">Ключевые возможности, которые продают спокойствие</div>
-        
-          <div class="brand-note">Paid Access Bot</div>
         </div>
-        <div class="box">
-          <div class="panel">
+        <div class="section-grid section-grid--reverse">
+          <div class="card panel panel--wide">
             <ul class="bullets">
               <li class="bullet">Каналы, тарифы и источники — в одном окне</li>
               <li class="bullet">Заявки администраторов и менеджеров — под контролем</li>
@@ -744,25 +843,24 @@
               <li class="bullet">Статистика по каналу, источнику и тарифу</li>
             </ul>
           </div>
-          <div class="visual imgShield imgBox" ></div>
+          <div class="visual visual-card visual--shield" aria-hidden="true"></div>
         </div>
+        <div class="brand-note">Paid Access Bot</div>
       </div>
     </section>
 
     <section class="slide" id="slide-5">
       <div class="glow"></div>
-      <div class="glow alt"></div>
-      <div class="wrapper">
-        <div class="leftBox">
+      <div class="glow glow--alt"></div>
+      <div class="slide__inner slide__inner--single">
+        <div class="slide__intro slide__intro--center">
           <h2 class="title">Для пользователя — путь без трения</h2>
           <div class="subtitle">Чем проще вход, тем выше конверсия</div>
-         
           <div class="cta-box">Меньше шагов — больше оплат и активаций.</div>
-          <div class="brand-note">Paid Access Bot</div>
         </div>
-        <div class="box">
-          <div class="visual imgGirl imgBox"></div>
-           <div class="panel">
+        <div class="section-grid">
+          <div class="visual visual-card visual--girl" aria-hidden="true"></div>
+          <div class="card panel panel--wide">
             <ul class="bullets">
               <li class="bullet">Переход по ссылке — сразу в нужный сценарий</li>
               <li class="bullet">Разные валюты и методы оплаты</li>
@@ -771,24 +869,21 @@
             </ul>
           </div>
         </div>
+        <div class="brand-note">Paid Access Bot</div>
       </div>
     </section>
 
     <section class="slide" id="slide-6">
       <div class="glow"></div>
-      <div class="glow alt"></div>
-      <div class="wrapper">
-        <div class="leftBox">
-          <div class="chip" style="min-width:auto; font-size: clamp(18px,1.4vw,24px); padding-inline: 18px; margin: 62px 0 0;">Инструмент для роста</div>
+      <div class="glow glow--alt"></div>
+      <div class="slide__inner slide__inner--single">
+        <div class="slide__intro slide__intro--center">
+          <div class="chip">Инструмент для роста</div>
           <h2 class="title">Почему клиенты захотят это внедрить</h2>
-        
-       
-          <div class="brand-note">Paid Access Bot</div>
         </div>
-        <div class="box">
-          <div class="leftBig">
-
-            <div class="panel panelLast">
+        <div class="section-grid section-grid--reverse">
+          <div class="stack">
+            <div class="card panel panel--wide">
               <ul class="bullets">
                 <li class="bullet">Меньше ручной работы и ошибок</li>
                 <li class="bullet">Больше прозрачности по продажам</li>
@@ -805,44 +900,58 @@
               к «когда запускаем?». 
             </div>
           </div>
-          <div class="visual  imgPeoples" ></div>
+          <div class="visual visual-card visual--team" aria-hidden="true"></div>
         </div>
+        <div class="brand-note">Paid Access Bot</div>
       </div>
     </section>
   </main>
 
   <script>
-    const slides = [...document.querySelectorAll('.slide')];
-    const dots = [...document.querySelectorAll('.nav-dots a')];
+    (() => {
+      const slides = [...document.querySelectorAll('.slide')];
+      const dots = [...document.querySelectorAll('.nav-dots__link')];
+      const flowCards = [...document.querySelectorAll('#slide-3 .flow-card')];
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          const id = entry.target.id;
-          dots.forEach(dot => dot.classList.toggle('active', dot.getAttribute('href') === '#' + id));
-        }
+      const setActiveDot = (id) => {
+        dots.forEach((dot) => {
+          dot.classList.toggle('is-active', dot.getAttribute('href') === `#${id}`);
+        });
+      };
+
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('is-visible');
+            setActiveDot(entry.target.id);
+          });
+        }, { threshold: 0.35 });
+
+        slides.forEach((slide) => observer.observe(slide));
+      } else {
+        slides.forEach((slide) => slide.classList.add('is-visible'));
+      }
+
+      dots.forEach((dot) => {
+        dot.addEventListener('click', () => {
+          const id = dot.getAttribute('href')?.replace('#', '');
+          if (id) setActiveDot(id);
+        });
       });
-    }, {
-      threshold: 0.35
-    });
 
-    slides.forEach(slide => io.observe(slide));
+      if (!prefersReducedMotion && flowCards.length) {
+        let activeIndex = flowCards.findIndex((card) => card.classList.contains('is-active'));
+        activeIndex = activeIndex >= 0 ? activeIndex : 0;
 
-    const flowCards = [...document.querySelectorAll('#slide-3 .flow-card')];
-    let flowIndex = 2;
-    setInterval(() => {
-      flowCards.forEach(card => card.classList.remove('active'));
-      flowCards[flowIndex].classList.add('active');
-      flowIndex = (flowIndex + 1) % flowCards.length;
-    }, 1600);
-
-    dots.forEach(dot => {
-      dot.addEventListener('click', () => {
-        dots.forEach(d => d.classList.remove('active'));
-        dot.classList.add('active');
-      });
-    });
+        window.setInterval(() => {
+          flowCards[activeIndex].classList.remove('is-active');
+          activeIndex = (activeIndex + 1) % flowCards.length;
+          flowCards[activeIndex].classList.add('is-active');
+        }, 1600);
+      }
+    })();
   </script>
 </body>
 </html>
