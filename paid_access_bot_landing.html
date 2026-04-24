@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paid Access Bot — презентация в HTML</title>
+  <style>
+    :root {
+      --bg: #001534;
+      --bg-deep: #000c22;
+      --panel: rgba(8, 27, 70, 0.92);
+      --panel-soft: rgba(10, 31, 76, 0.72);
+      --line: rgba(74, 127, 213, 0.48);
+      --line-strong: rgba(55, 203, 255, 0.9);
+      --text: #f1f4ff;
+      --muted: #9caad0;
+      --brand: #32c6ff;
+      --brand-2: #4ef0db;
+      --warn: #ffbe4d;
+      --shadow: 0 0 0 1px rgba(44,95,180,.26), 0 24px 70px rgba(0,0,0,.32);
+      --radius: 18px;
+      --side-pad: clamp(26px, 5vw, 80px);
+      --content-max: 1440px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 78% 48%, rgba(23, 102, 255, 0.23), transparent 0 18%, rgba(0,0,0,0) 19%),
+        radial-gradient(circle at 84% 46%, rgba(18, 186, 255, 0.08), transparent 0 22%),
+        linear-gradient(90deg, var(--bg-deep) 0%, #00163d 53%, #00183f 70%, #00112f 100%);
+      overflow-x: hidden;
+      scroll-snap-type: y mandatory;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .deck {
+      position: relative;
+      width: 100%;
+    }
+
+    .slide {
+      position: relative;
+      min-height: 100vh;
+      scroll-snap-align: start;
+      display: flex;
+      align-items: stretch;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 85% 52%, rgba(46, 121, 255, 0.18), transparent 0 18%, rgba(0,0,0,0) 19%),
+        linear-gradient(90deg, rgba(0,0,0,0) 53%, rgba(9, 57, 145, 0.18) 73%, rgba(0,0,0,0) 100%);
+      opacity: .9;
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    .slide::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,.18) 0%, rgba(0,0,0,0) 18%, rgba(0,0,0,0) 76%, rgba(0,0,0,.28) 100%);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .inner {
+      width: min(calc(100% - 48px), var(--content-max));
+      margin: auto;
+      padding: clamp(34px, 4vw, 48px) 0;
+      display: grid;
+      grid-template-columns: 0.98fr 1fr;
+      gap: clamp(24px, 3vw, 56px);
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-left: max(0px, calc(var(--side-pad) - 24px));
+      max-width: 760px;
+    }
+
+    .right {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: min(80vh, 780px);
+      padding-right: clamp(0px, 2vw, 24px);
+    }
+
+    .chip {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 310px;
+      padding: 12px 24px;
+      border-radius: 12px;
+      background: rgba(22, 47, 95, 0.95);
+      border: 1px solid rgba(54, 153, 255, .5);
+      color: var(--brand);
+      font-size: clamp(19px, 2vw, 24px);
+      font-weight: 700;
+      line-height: 1.05;
+      text-align: center;
+      box-shadow: inset 0 0 0 1px rgba(73, 154, 255, .12);
+      transform: translateY(18px);
+      opacity: 0;
+    }
+
+    .title {
+      margin: 42px 0 20px;
+      font-size: clamp(52px, 6.1vw, 74px);
+      line-height: .98;
+      letter-spacing: -.04em;
+      font-weight: 800;
+      transform: translateY(26px);
+      opacity: 0;
+      text-wrap: balance;
+    }
+
+    .subtitle {
+      margin: 0 0 42px;
+      color: var(--muted);
+      font-size: clamp(22px, 2.5vw, 33px);
+      line-height: 1.22;
+      transform: translateY(22px);
+      opacity: 0;
+    }
+
+    .body {
+      color: var(--muted);
+      font-size: clamp(17px, 2vw, 28px);
+      line-height: 1.34;
+      max-width: 680px;
+      transform: translateY(24px);
+      opacity: 0;
+    }
+
+    .brand-note {
+      margin-top: auto;
+      padding-top: 28px;
+      color: var(--brand);
+      font-size: clamp(18px, 2vw, 24px);
+      font-weight: 700;
+      transform: translateY(18px);
+      opacity: 0;
+    }
+
+    .panel {
+      width: min(100%, 700px);
+      padding: clamp(28px, 2.4vw, 40px);
+      border-radius: 18px;
+      background: rgba(9, 26, 69, 0.88);
+      border: 1px solid rgba(58, 111, 198, 0.5);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+      transform: translateY(30px);
+      opacity: 0;
+      transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .panel:hover, .imgBox:hover {
+      transform: translateY(-4px);
+      border-color: rgba(77, 181, 255, .85);
+      box-shadow: 0 0 0 1px rgba(71,171,255,.4), 0 28px 84px rgba(0,0,0,.45), 0 0 40px rgba(36,160,255,.18);
+    }
+
+    .bullets {
+      display: grid;
+      gap: clamp(22px, 2.5vw, 34px);
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      font-size: clamp(23px, 2.6vw, 36px);
+      line-height: 1.14;
+    }
+
+    .bullet {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 18px;
+      align-items: start;
+      transition: transform .3s ease, color .3s ease;
+    }
+
+    .bullet::before {
+      content: "";
+      width: 16px;
+      height: 16px;
+      margin-top: .35em;
+      border-radius: 50%;
+      background: var(--brand);
+      box-shadow: 0 0 18px rgba(50, 198, 255, .72);
+    }
+
+    .bullet.warn::before {
+      background: var(--warn);
+      box-shadow: 0 0 18px rgba(255,190,77,.62);
+    }
+
+    .panel:hover .bullet {
+      transform: translateX(3px);
+    }
+
+    .outcome {
+      margin-top: clamp(34px, 3vw, 50px);
+      font-size: clamp(24px, 2.6vw, 38px);
+      line-height: 1.18;
+      font-weight: 800;
+    }
+
+    .cta-box {
+      width: min(100%, 640px);
+      margin: 22px auto 0;
+      padding: 18px 26px;
+      border-radius: 16px;
+      background: rgba(22, 44, 93, 0.96);
+      border: 1px solid rgba(61, 145, 239, .56);
+      box-shadow: var(--shadow);
+      font-size: clamp(26px, 2.3vw, 34px);
+      line-height: 1.12;
+      font-weight: 800;
+      text-align: center;
+      transform: translateY(22px);
+      opacity: 0;
+      transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+    }
+
+    .cta-box:hover {
+      transform: translateY(-3px);
+      border-color: rgba(87, 209, 255, .95);
+      box-shadow: 0 0 0 1px rgba(89,209,255,.38), 0 26px 80px rgba(0,0,0,.42);
+    }
+
+    .visual {
+      position: relative;
+      width: min(760px, 100%);
+      aspect-ratio: 1 / 1;
+      border-radius: 0;
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      filter: drop-shadow(0 40px 90px rgba(0,0,0,.42));
+      transform: translateX(30px) scale(.98);
+      opacity: 0;
+      transition: transform .65s cubic-bezier(.2,.9,.2,1), filter .35s ease;
+    }
+
+    .visual:hover {
+      filter: drop-shadow(0 55px 110px rgba(0,0,0,.55)) drop-shadow(0 0 44px rgba(40,150,255,.22));
+    }
+
+    .visual.phone {
+      aspect-ratio: 1 / 1.08;
+      background-size: contain;
+      background-image: url(./1.png);
+    }
+
+    .visual.people {
+      aspect-ratio: 1 / .95;
+      background-image: url(./2.png);
+    }
+
+    .flow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: clamp(10px, 1.2vw, 18px);
+      width: 100%;
+      margin-top: 70px;
+    }
+
+    .flow-card {
+      flex: 1 1 0;
+      min-height: 190px;
+      padding: 20px 18px;
+      border-radius: 14px;
+      background: rgba(8, 25, 66, .86);
+      border: 1px solid rgba(46, 94, 174, .62);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 12px;
+      position: relative;
+      transform: translateY(32px);
+      opacity: 0;
+      transition: transform .35s ease, border-color .35s ease, box-shadow .35s ease, background .35s ease;
+    }
+
+    .flow-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(87,209,255, .95);
+      box-shadow: 0 0 0 1px rgba(87,209,255,.35), 0 22px 70px rgba(0,0,0,.42), 0 0 36px rgba(50,198,255,.18);
+    }
+
+    .flow-card.active {
+      background: rgba(20, 44, 94, .98);
+      border-color: rgba(87,209,255,.98);
+      box-shadow: 0 0 0 1px rgba(87,209,255,.48), 0 0 35px rgba(50,198,255,.22), 0 26px 76px rgba(0,0,0,.44);
+    }
+
+    .flow-card .step {
+      color: var(--brand);
+      font-size: 32px;
+      font-weight: 700;
+    }
+
+    .flow-card .main {
+      font-size: clamp(32px, 2.2vw, 44px);
+      line-height: 1.06;
+      font-weight: 800;
+    }
+
+    .flow-card .mini {
+      color: var(--muted);
+      font-size: clamp(18px, 1.3vw, 24px);
+      line-height: 1.16;
+    }
+
+    .flow-arrow {
+      width: 50px;
+      height: 50px;
+      position: relative;
+      flex: 0 0 50px;
+      transform: translateY(16px);
+      opacity: 0;
+    }
+
+    .flow-arrow::before {
+      content: "";
+      position: absolute;
+      inset: 8px 0;
+      clip-path: polygon(0 50%, 58% 0, 58% 24%, 100% 24%, 100% 76%, 58% 76%, 58% 100%);
+      background: linear-gradient(90deg, rgba(42,97,183,.55), rgba(57,125,226,.8));
+      filter: drop-shadow(0 0 16px rgba(51,119,222,.35));
+      transform: rotate(180deg);
+    }
+
+    .system-box {
+      width: min(100%, 1340px);
+      margin-top: 120px;
+      margin-inline: auto;
+      padding: 22px 34px;
+      border-radius: 16px;
+      background: rgba(17, 38, 81, 0.92);
+      border: 1px solid rgba(60, 112, 191, .55);
+      box-shadow: var(--shadow);
+      text-align: center;
+      font-size: clamp(23px, 1.8vw, 34px);
+      line-height: 1.22;
+      transform: translateY(26px);
+      opacity: 0;
+      transition: transform .35s ease, border-color .35s ease, box-shadow .35s ease;
+    }
+
+    .system-box:hover {
+      transform: translateY(-3px);
+      border-color: rgba(87,209,255,.88);
+      box-shadow: 0 0 0 1px rgba(87,209,255,.35), 0 24px 72px rgba(0,0,0,.4);
+    }
+
+    .stack {
+      display: grid;
+      gap: 18px;
+    }
+
+    .lede-strong {
+      margin-top: 40px;
+      font-size: clamp(26px, 2.7vw, 45px);
+      line-height: 1.1;
+      font-weight: 800;
+      max-width: 760px;
+      transform: translateY(20px);
+      opacity: 0;
+    }
+
+    .lede-italic {
+      color: #c5d3f7;
+      font-style: italic;
+      font-size: clamp(16px, 1.5vw, 24px);
+      line-height: 1.26;
+      max-width: 700px;
+      margin-top: -6px;
+      transform: translateY(22px);
+      opacity: 0;
+    }
+
+    .nav-dots {
+      position: fixed;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .nav-dots a {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(88, 157, 255, .55);
+      background: rgba(8, 28, 70, .86);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
+      transition: transform .22s ease, background .22s ease, box-shadow .22s ease;
+    }
+
+    .nav-dots a:hover,
+    .nav-dots a.active {
+      transform: scale(1.22);
+      background: var(--brand);
+      box-shadow: 0 0 16px rgba(50,198,255,.55);
+    }
+
+    .top-link {
+      position: fixed;
+      left: 24px;
+      bottom: 24px;
+      z-index: 40;
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: rgba(7, 24, 59, .9);
+      border: 1px solid rgba(67, 126, 214, .44);
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: var(--shadow);
+      transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+    }
+
+    .top-link:hover {
+      transform: translateY(-2px);
+      border-color: rgba(87,209,255,.82);
+      box-shadow: 0 0 0 1px rgba(87,209,255,.28), 0 16px 54px rgba(0,0,0,.35);
+    }
+
+    .glow {
+      position: absolute;
+      inset: auto;
+      right: 8%;
+      top: 10%;
+      width: 380px;
+      height: 380px;
+      background: radial-gradient(circle, rgba(100, 148, 225, 0.2), transparent 65%);
+      filter: blur(18px);
+      pointer-events: none;
+      animation: drift 7.2s ease-in-out infinite;
+    }
+
+    .glow.alt {
+      width: 320px;
+      height: 320px;
+      top: auto;
+      bottom: 10%;
+      right: 22%;
+      animation-duration: 8.4s;
+      animation-delay: -2.8s;
+      background: radial-gradient(circle, rgba(17,227,221,.12), transparent 68%);
+    }
+
+    @keyframes drift {
+      0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+      50% { transform: translate3d(-22px, 18px, 0) scale(1.06); }
+    }
+
+    @keyframes bob {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+
+    @keyframes pulseBorder {
+      0%, 100% { box-shadow: 0 0 0 1px rgba(87,209,255,.18), 0 24px 70px rgba(0,0,0,.32); }
+      50% { box-shadow: 0 0 0 1px rgba(87,209,255,.34), 0 24px 70px rgba(0,0,0,.36), 0 0 30px rgba(50,198,255,.14); }
+    }
+
+    .slide.is-visible .chip,
+    .slide.is-visible .title,
+    .slide.is-visible .subtitle,
+    .slide.is-visible .body,
+    .slide.is-visible .brand-note,
+    .slide.is-visible .panel,
+    .slide.is-visible .cta-box,
+    .slide.is-visible .lede-strong,
+    .slide.is-visible .lede-italic,
+    .slide.is-visible .visual,
+    .slide.is-visible .flow-card,
+    .slide.is-visible .flow-arrow,
+    .slide.is-visible .system-box {
+      opacity: 1;
+      transform: none;
+    }
+
+    .slide.is-visible .chip { transition: opacity .55s ease, transform .55s ease; }
+    .slide.is-visible .title { transition: opacity .7s ease .08s, transform .7s ease .08s; }
+    .slide.is-visible .subtitle { transition: opacity .7s ease .16s, transform .7s ease .16s; }
+    .slide.is-visible .body { transition: opacity .7s ease .22s, transform .7s ease .22s; }
+    .slide.is-visible .panel { transition: opacity .78s ease .28s, transform .78s ease .28s; }
+    .slide.is-visible .cta-box,
+    .slide.is-visible .lede-strong,
+    .slide.is-visible .lede-italic,
+    .slide.is-visible .brand-note { transition: opacity .72s ease .32s, transform .72s ease .32s; }
+    /* .slide.is-visible .visual, .panel {
+      transition: opacity .9s cubic-bezier(.2,.9,.2,1) .24s, transform .9s cubic-bezier(.2,.9,.2,1) .24s, filter .35s ease;
+      animation: bob 7.6s ease-in-out infinite;
+    } */
+    .levitation{
+      transition: opacity .9s cubic-bezier(.2,.9,.2,1) .24s, transform .9s cubic-bezier(.2,.9,.2,1) .24s, filter .35s ease;
+      animation: bob 7.6s ease-in-out infinite;
+    }
+    .slide.is-visible .flow-card:nth-of-type(1) { transition: opacity .62s ease .18s, transform .62s ease .18s, border-color .35s ease, box-shadow .35s ease, background .35s ease; }
+    .slide.is-visible .flow-arrow:nth-of-type(2) { transition: opacity .52s ease .26s, transform .52s ease .26s; }
+    .slide.is-visible .flow-card:nth-of-type(3) { transition: opacity .62s ease .34s, transform .62s ease .34s, border-color .35s ease, box-shadow .35s ease, background .35s ease; }
+    .slide.is-visible .flow-arrow:nth-of-type(4) { transition: opacity .52s ease .42s, transform .52s ease .42s; }
+    .slide.is-visible .flow-card:nth-of-type(5) { transition: opacity .62s ease .50s, transform .62s ease .50s, border-color .35s ease, box-shadow .35s ease, background .35s ease; }
+    .slide.is-visible .flow-arrow:nth-of-type(6) { transition: opacity .52s ease .58s, transform .52s ease .58s; }
+    .slide.is-visible .flow-card:nth-of-type(7) { transition: opacity .62s ease .66s, transform .62s ease .66s, border-color .35s ease, box-shadow .35s ease, background .35s ease; }
+    .slide.is-visible .flow-arrow:nth-of-type(8) { transition: opacity .52s ease .74s, transform .52s ease .74s; }
+    .slide.is-visible .flow-card:nth-of-type(9) { transition: opacity .62s ease .82s, transform .62s ease .82s, border-color .35s ease, box-shadow .35s ease, background .35s ease; }
+    .slide.is-visible .system-box { transition: opacity .8s ease .96s, transform .8s ease .96s, border-color .35s ease, box-shadow .35s ease; animation: pulseBorder 4.2s ease-in-out infinite; }
+
+    @media (max-width: 1280px) {
+      .inner { grid-template-columns: 1fr; gap: 24px; width: min(calc(100% - 32px), 1280px); }
+      .left { padding-left: 0; }
+      .right { min-height: 36vh; padding-right: 0; }
+      .visual { width: min(820px, 100%); }
+      .flow { flex-wrap: wrap; justify-content: center; }
+      .flow-card { flex: 1 1 calc(50% - 18px); min-width: 230px; }
+      .flow-arrow { display: none; }
+      .system-box { margin-top: 28px; }
+      .nav-dots { right: 14px; }
+    }
+
+    @media (max-width: 720px) {
+      body { scroll-snap-type: none; }
+      .slide, .inner { min-height: auto; }
+      .left { padding-top: 32px; }
+      .chip { min-width: unset; width: fit-content; max-width: 100%; font-size: 16px; padding: 10px 16px; }
+      .title { margin-top: 24px; font-size: 44px; }
+      .subtitle { font-size: 18px; margin-bottom: 24px; }
+      .body { font-size: 16px; }
+      .bullets { gap: 18px; font-size: 18px; }
+      .panel { padding: 20px; }
+      .flow-card { min-height: 140px; padding: 16px; }
+      .flow-card .step { font-size: 20px; }
+      .flow-card .main { font-size: 24px; }
+      .flow-card .mini { font-size: 14px; }
+      .system-box { padding: 18px 20px; font-size: 18px; }
+      .cta-box, .lede-strong { font-size: 22px; }
+      .lede-italic { font-size: 15px; }
+      .nav-dots { display: none; }
+      .top-link { left: 14px; bottom: 14px; }
+      .visual { aspect-ratio: 1/.86; }
+    }
+    .wrapper{
+      width: 100%;
+    }
+    .box{
+      display: flex;
+    align-items: stretch;
+    gap: 10px;
+    justify-content: center;
+    }
+    .imgBox{
+      border-radius: 18px;
+    background: rgba(9, 26, 69, 0.88);
+    border: 1px solid rgba(58, 111, 198, 0.5);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(8px);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    }
+    .leftBox{text-align: center;}
+    .panelBox,.imgBox{
+      max-width: 45dvw;
+    }
+    .imgShield{
+      background-image: url(./3.png);
+    }
+    .imgGirl{
+      background-image: url(./4.png);
+    }
+    .imgPeoples{
+      background-image: url(./5.png);
+    }
+    .panelLast{
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav-dots" aria-label="Навигация по слайдам">
+    <a href="#slide-1" class="active" aria-label="Слайд 1"></a>
+    <a href="#slide-2" aria-label="Слайд 2"></a>
+    <a href="#slide-3" aria-label="Слайд 3"></a>
+    <a href="#slide-4" aria-label="Слайд 4"></a>
+    <a href="#slide-5" aria-label="Слайд 5"></a>
+    <a href="#slide-6" aria-label="Слайд 6"></a>
+  </nav>
+
+  <a class="top-link" href="#slide-1">↑ К началу</a>
+
+  <main class="deck">
+    <section class="slide is-visible" id="slide-1">
+      <div class="glow"></div>
+      <div class="glow alt"></div>
+      <div class="inner">
+        <div class="left">
+          <div class="chip">Telegram • Подписки •<br/>Аналитика</div>
+          <h1 class="title">Монетизация Telegram<br/>без хаоса</h1>
+          <p class="body">
+            Один инструмент, который превращает канал в управляемый продукт:
+            тарифы, доступ, заявки, платежи и статистика.
+          </p>
+          <div class="panel" style="margin-top: 42px;">
+            <ul class="bullets">
+              <li class="bullet">Выдача доступа без ручной рутины</li>
+              <li class="bullet">Реклама с понятной атрибуцией</li>
+              <li class="bullet">Команда работает быстрее и спокойнее</li>
+            </ul>
+          </div>
+          <div class="brand-note">Paid Access Bot</div>
+        </div>
+        <div class="right">
+          <div class="visual phone levitation"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="slide-2">
+      <div class="glow"></div>
+      <div class="glow alt"></div>
+      <div class="wrapper">
+        <div class="leftBox">
+          <h2 class="title">Когда канал растёт — хаос растёт быстрее</h2>
+          <div class="subtitle">Боль, которую клиент чувствует каждый день</div>
+       
+          <div class="brand-note">Paid Access Bot</div>
+        </div>
+        <div class="box">
+          <div class="visual people imgBox"></div>
+          <div class="panel panelBox">
+            <ul class="bullets">
+              <li class="bullet warn">Доступ в канал выдаётся вручную</li>
+              <li class="bullet warn">Нельзя понять, какая реклама реально продаёт</li>
+              <li class="bullet warn">Тарифы, менеджеры и пользователи тонут в сообщениях</li>
+              <li class="bullet warn">Команда тратит время не на рост, а на операционку</li>
+            </ul>
+            <div class="outcome">Итог: канал зарабатывает меньше, чем мог бы.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="slide-3">
+      <div class="glow"></div>
+      <div class="glow alt"></div>
+      <div class="inner" style="grid-template-columns: 1fr;">
+        <div class="leftBox" style="max-width:none; padding-left:max(0px, calc(var(--side-pad) - 24px));">
+          <h2 class="title">Как это работает</h2>
+          <div class="subtitle">Простой путь от трафика до денег и удержания</div>
+        </div>
+        <div class="stack">
+          <div class="flow">
+            <div class="flow-card">
+              <div class="step">1</div>
+              <div class="main">Трафик</div>
+              <div class="mini">Источник</div>
+            </div>
+            <div class="flow-arrow"></div>
+            <div class="flow-card">
+              <div class="step">2</div>
+              <div class="main">Тариф</div>
+              <div class="mini">выбор оффера</div>
+            </div>
+            <div class="flow-arrow"></div>
+            <div class="flow-card active">
+              <div class="step">3</div>
+              <div class="main">Оплата</div>
+              <div class="mini">или share-link</div>
+            </div>
+            <div class="flow-arrow"></div>
+            <div class="flow-card">
+              <div class="step">4</div>
+              <div class="main">Доступ</div>
+              <div class="mini">в Telegram-канал</div>
+            </div>
+            <div class="flow-arrow"></div>
+            <div class="flow-card">
+              <div class="step">5</div>
+              <div class="main">Аналитика</div>
+              <div class="mini">и удержание</div>
+            </div>
+          </div>
+          <div class="system-box">
+            Всё в одной системе: owner / admin / manager, поддержка, напоминания,
+            удаление после окончания подписки.
+          </div>
+          <div class="brand-note" style="padding-left:max(0px, calc(var(--side-pad) - 24px));">Paid Access Bot</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="slide-4">
+      <div class="glow"></div>
+      <div class="glow alt"></div>
+      <div class="wrapper">
+        <div class="leftBox">
+          <h2 class="title">Для владельца канала — контроль, а не ручной режим</h2>
+          <div class="subtitle">Ключевые возможности, которые продают спокойствие</div>
+        
+          <div class="brand-note">Paid Access Bot</div>
+        </div>
+        <div class="box">
+          <div class="panel">
+            <ul class="bullets">
+              <li class="bullet">Каналы, тарифы и источники — в одном окне</li>
+              <li class="bullet">Заявки администраторов и менеджеров — под контролем</li>
+              <li class="bullet">Одноразовые ссылки на тарифы для акций и партнёров</li>
+              <li class="bullet">Поддержка внутри бота, без потерь в переписках</li>
+              <li class="bullet">Статистика по каналу, источнику и тарифу</li>
+            </ul>
+          </div>
+          <div class="visual imgShield imgBox" ></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="slide-5">
+      <div class="glow"></div>
+      <div class="glow alt"></div>
+      <div class="wrapper">
+        <div class="leftBox">
+          <h2 class="title">Для пользователя — путь без трения</h2>
+          <div class="subtitle">Чем проще вход, тем выше конверсия</div>
+         
+          <div class="cta-box">Меньше шагов — больше оплат и активаций.</div>
+          <div class="brand-note">Paid Access Bot</div>
+        </div>
+        <div class="box">
+          <div class="visual imgGirl imgBox"></div>
+           <div class="panel">
+            <ul class="bullets">
+              <li class="bullet">Переход по ссылке — сразу в нужный сценарий</li>
+              <li class="bullet">Разные валюты и методы оплаты</li>
+              <li class="bullet">Одноразовый бесплатный доступ по share-link</li>
+              <li class="bullet">Напоминания и автоконтроль доступа</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="slide-6">
+      <div class="glow"></div>
+      <div class="glow alt"></div>
+      <div class="wrapper">
+        <div class="leftBox">
+          <div class="chip" style="min-width:auto; font-size: clamp(18px,1.4vw,24px); padding-inline: 18px; margin: 62px 0 0;">Инструмент для роста</div>
+          <h2 class="title">Почему клиенты захотят это внедрить</h2>
+        
+       
+          <div class="brand-note">Paid Access Bot</div>
+        </div>
+        <div class="box">
+          <div class="leftBig">
+
+            <div class="panel panelLast">
+              <ul class="bullets">
+                <li class="bullet">Меньше ручной работы и ошибок</li>
+                <li class="bullet">Больше прозрачности по продажам</li>
+                <li class="bullet">Реклама измеряется, а не угадывается</li>
+                <li class="bullet">Команда масштабируется без хаоса</li>
+              </ul>
+            </div>
+            <div class="lede-strong">
+              Ваш Telegram-канал начинает выглядеть как цифровой продукт,
+              а не как бесконечная ручная переписка.
+            </div>
+            <div class="lede-italic">
+              Покажите это клиенту — и разговор быстро перейдёт от «интересно»
+              к «когда запускаем?». 
+            </div>
+          </div>
+          <div class="visual  imgPeoples" ></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    const dots = [...document.querySelectorAll('.nav-dots a')];
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          const id = entry.target.id;
+          dots.forEach(dot => dot.classList.toggle('active', dot.getAttribute('href') === '#' + id));
+        }
+      });
+    }, {
+      threshold: 0.35
+    });
+
+    slides.forEach(slide => io.observe(slide));
+
+    const flowCards = [...document.querySelectorAll('#slide-3 .flow-card')];
+    let flowIndex = 2;
+    setInterval(() => {
+      flowCards.forEach(card => card.classList.remove('active'));
+      flowCards[flowIndex].classList.add('active');
+      flowIndex = (flowIndex + 1) % flowCards.length;
+    }, 1600);
+
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        dots.forEach(d => d.classList.remove('active'));
+        dot.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
