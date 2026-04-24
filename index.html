@@ -300,6 +300,69 @@
       box-shadow: 0 0 0 1px rgba(89, 209, 255, 0.38), 0 26px 80px rgba(0, 0, 0, 0.42);
     }
 
+
+    .cta-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+      margin-top: clamp(24px, 3vw, 36px);
+      transform: translateY(22px);
+      opacity: 0;
+    }
+
+    .cta-actions--center {
+      justify-content: center;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 56px;
+      padding: 16px 26px;
+      border: 1px solid rgba(87, 209, 255, 0.76);
+      border-radius: 999px;
+      color: #001534;
+      background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+      box-shadow: 0 0 0 1px rgba(87, 209, 255, 0.26), 0 20px 56px rgba(50, 198, 255, 0.22);
+      font-size: clamp(16px, 1.35vw, 20px);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.01em;
+      text-align: center;
+      transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease, background 0.24s ease;
+    }
+
+    .cta-button::after {
+      content: "→";
+      margin-left: 10px;
+      font-size: 1.05em;
+      transition: transform 0.24s ease;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255, 255, 255, 0.88);
+      box-shadow: 0 0 0 1px rgba(87, 209, 255, 0.42), 0 26px 70px rgba(50, 198, 255, 0.32), 0 0 34px rgba(78, 240, 219, 0.18);
+    }
+
+    .cta-button:hover::after {
+      transform: translateX(3px);
+    }
+
+    .cta-button--ghost {
+      color: var(--text);
+      background: rgba(7, 24, 59, 0.72);
+      border-color: rgba(87, 209, 255, 0.48);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04), 0 18px 48px rgba(0, 0, 0, 0.22);
+    }
+
+    .cta-button--ghost:hover {
+      border-color: var(--line-accent);
+      background: rgba(12, 37, 86, 0.9);
+    }
+
     .visual {
       position: relative;
       width: min(760px, 100%);
@@ -496,6 +559,7 @@
     .is-visible .brand-note,
     .is-visible .panel,
     .is-visible .cta-box,
+    .is-visible .cta-actions,
     .is-visible .lede-strong,
     .is-visible .lede-italic,
     .is-visible .visual,
@@ -513,6 +577,7 @@
     .is-visible .panel,
     .is-visible .visual-card { transition: opacity 0.78s ease 0.28s, transform 0.78s ease 0.28s, border-color 0.35s ease, box-shadow 0.35s ease, background 0.35s ease; }
     .is-visible .cta-box,
+    .is-visible .cta-actions,
     .is-visible .lede-strong,
     .is-visible .lede-italic,
     .is-visible .brand-note { transition: opacity 0.72s ease 0.32s, transform 0.72s ease 0.32s; }
@@ -684,6 +749,17 @@
         font-size: 22px;
       }
 
+      .cta-actions,
+      .cta-actions--center {
+        justify-content: stretch;
+      }
+
+      .cta-button {
+        width: 100%;
+        min-height: 52px;
+        padding: 15px 20px;
+      }
+
       .nav-dots {
         display: none;
       }
@@ -741,6 +817,10 @@
             Один инструмент, который превращает канал в управляемый продукт:
             тарифы, доступ, заявки, платежи и статистика.
           </p>
+          <div class="cta-actions" aria-label="Основные действия">
+            <a class="cta-button" href="https://t.me/tg_assistant_x_bot" target="_blank" rel="noopener">Запустить бота</a>
+            <a class="cta-button cta-button--ghost" href="https://t.me/tg_assistant_x_bot" target="_blank" rel="noopener">Получить консультацию</a>
+          </div>
           <div class="card panel panel--hero">
             <ul class="bullets">
               <li class="bullet">Выдача доступа без ручной рутины</li>
@@ -820,6 +900,9 @@
             Всё в одной системе: owner / admin / manager, поддержка, напоминания,
             удаление после окончания подписки.
           </div>
+          <div class="cta-actions cta-actions--center" aria-label="Переход к боту">
+            <a class="cta-button" href="https://t.me/tg_assistant_x_bot" target="_blank" rel="noopener">Открыть бота в Telegram</a>
+          </div>
         </div>
         <div class="brand-note">Paid Access Bot</div>
       </div>
@@ -857,6 +940,9 @@
           <h2 class="title">Для пользователя — путь без трения</h2>
           <div class="subtitle">Чем проще вход, тем выше конверсия</div>
           <div class="cta-box">Меньше шагов — больше оплат и активаций.</div>
+          <div class="cta-actions cta-actions--center" aria-label="Действие для пользователя">
+            <a class="cta-button" href="https://t.me/tg_assistant_x_bot" target="_blank" rel="noopener">Попробовать через Telegram</a>
+          </div>
         </div>
         <div class="section-grid">
           <div class="visual visual-card visual--girl" aria-hidden="true"></div>
@@ -898,6 +984,10 @@
             <div class="lede-italic">
               Покажите это клиенту — и разговор быстро перейдёт от «интересно»
               к «когда запускаем?». 
+            </div>
+            <div class="cta-actions" aria-label="Финальный призыв к действию">
+              <a class="cta-button" href="https://t.me/tg_assistant_x_bot" target="_blank" rel="noopener">Начать внедрение</a>
+              <a class="cta-button cta-button--ghost" href="https://t.me/tg_assistant_x_bot" target="_blank" rel="noopener">Написать в Telegram</a>
             </div>
           </div>
           <div class="visual visual-card visual--team" aria-hidden="true"></div>
